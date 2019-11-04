@@ -35,9 +35,11 @@ export default class MinecraftServerManager {
         // // @ts-ignore
         // serverProcess.stdin.setEncoding('utf-8')
         serverProcess.stdout.setEncoding('utf-8')
-        serverProcess.stdout.on('data', (text) => {
-            MinecraftServerManager.logger.logDebug(text)
-        })
+        serverProcess.stderr.setEncoding('utf-8')
+        serverProcess.stdout.on('data', (text) => { MinecraftServerManager.logger.logDebug(text) })
+        serverProcess.stdout.on('error', (err) => { MinecraftServerManager.logger.logError(err) })
+        serverProcess.stderr.on('data', (text) => { MinecraftServerManager.logger.logDebug(text) })
+        serverProcess.stderr.on('error', (err) => { MinecraftServerManager.logger.logError(err) })
         this._server = serverProcess
         MinecraftServerManager.logger.logSuccess('Minecraft Server started!')
         return true
