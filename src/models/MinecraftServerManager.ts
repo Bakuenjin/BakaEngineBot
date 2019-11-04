@@ -28,9 +28,9 @@ export default class MinecraftServerManager {
             '-Xmx1024M',
             '-Xms1024M',
             '-jar',
-            '~/minecraft_server.jar',
+            'minecraft_server.jar',
             'nogui'
-        ])
+        ], { cwd: '/root'})
         // serverProcess.stdout.setEncoding('utf-8')
         // // @ts-ignore
         // serverProcess.stdin.setEncoding('utf-8')
