@@ -4,6 +4,7 @@ import { Client } from 'discord.js'
 import LogBotTagInformationFactory from './utils/LogBotTagInformationFactory'
 import ModuleManager from './bot-modules/ModuleManager'
 import settings from './settings/Settings'
+import sleep from './utils/sleep'
 
 export const client = new Client()
 const moduleManager = ModuleManager.getInstance()
@@ -18,6 +19,16 @@ async function login() {
     logger.logSuccess(`Logged in!`)
 }
 
+async function reconnect() {
+    try { await login() }
+    catch (err) {
+        logger.logError(err)
+        logger.logInfo('Trying to reconnect in 30 seconds.')
+        await sleep(30000)
+        reconnect()
+    }
+}
+
 async function init() {
     try {
         await login()
@@ -27,5 +38,5 @@ async function init() {
 }
 
 client.on('error', err => logger.logError(err))
-
+client.on('disconnect', _ => reconnect())
 init()
