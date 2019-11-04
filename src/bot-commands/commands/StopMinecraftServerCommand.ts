@@ -2,6 +2,7 @@ import Command from "../meta/Command";
 import { Logger } from "ts-logger";
 import ActivatedCommand from "../../models/ActivatedCommand";
 import MinecraftServerManager from "../../models/MinecraftServerManager";
+import settings from "../../settings/Settings";
 
 export default class StopMinecraftServerCommand extends Command {
 
@@ -13,6 +14,11 @@ export default class StopMinecraftServerCommand extends Command {
     public async execute(activatedCommand: ActivatedCommand): Promise<void> {
         try {
             const channel = activatedCommand.message.channel
+
+            if (!settings.usersWithMinecraftRights.includes(activatedCommand.message.member.id)) {
+                channel.send('You don\'t have the rights to stop the minecraft server!')
+                return
+            }
 
             const serverManager = MinecraftServerManager.getInstance()
             const isStopped = serverManager.stopServer()
